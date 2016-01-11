@@ -12,7 +12,9 @@ SRC_URI[sha256sum] = "3652e268f42ce60959dcc80ca3eba8dc17b6d365309179bfb0e04bc5f1
 #inherit autotools
 
 do_configure() {
-	${S}/configure
+    # Not sure why, but package and package_macro_name seem to be unset when
+    # crossing sometimes (e.g. for raspberry pi)
+    package=skalibs package_macro_name=SKALIBS ${S}/configure --enable-force-devr
 }
 
 do_install () {
