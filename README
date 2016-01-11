@@ -19,8 +19,7 @@ This layer depends on:
 Patches
 =======
 
-Please submit any patches against the s6 layer to the
-xxxx mailing list (xxxx@zzzz.org) and cc: the maintainer:
+Please submit patches by making a merge request on github.
 
 Maintainer: John O'Meara <john.fr.omeara@gmail.com>
 
@@ -54,4 +53,21 @@ other layers needed. e.g.:
 II. Misc
 ========
 
-Nothing here yet.
+Should work out-of-the-box if your target machine is similar to your host
+(e.g. x86-64 on x86-64 or x86 on x86-64).
+
+If you are building a cross (e.g. arm on x86-64), then skalibs won't build
+directly due to not being able to guess target machine parameters. There are
+two ways to fix this:
+
+  1) Add a bbappend in your layer to provide a premade sysdeps set, and run
+     skalib's configure against that sysdeps
+
+  2) Setup Linux to execute elf files of your target via qemu-user mode. If
+     you do this, you'll also need your target's ld (dynamic linker) and libc.
+     Since the linker is typically named after the target (e.g.
+     ld-linux-armhf.so.3) it can go directly into your /lib. The libc is more
+     tricky, and you may have to play with the search path a bit. For example,
+     the arm tools for raspberry pi search in /lib/neon (among many other
+     subdirectories), where the x86-64 host does not, so the arm libc can go
+     there. Other architectures/machines may vary.
