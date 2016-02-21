@@ -1,0 +1,10 @@
+diff --git a/package/info b/package/info
+index 0c240e1..da8e35d 100644
+--- a/package/info
++++ b/package/info
+@@ -1,4 +1,4 @@
+ package=anopa
+-version=0.4.0
++version=0.4.0.0
+ category=admin
+ package_macro_name=ANOPA
