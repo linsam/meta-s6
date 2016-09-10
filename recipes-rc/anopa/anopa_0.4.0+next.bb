@@ -11,6 +11,10 @@ SRC_URI = "git://github.com/jjk-jacky/anopa;protocol=git;branch=next"
 
 S = "${WORKDIR}/git"
 
+# Attempt to add debug symbols; sometimes 'aa-status -aL' crashes with a
+# malloc corruption that's hard to track down
+EXTRA_OEMAKE = "CFLAGS=-g"
+
 do_configure() {
     ${S}/tools/gen-deps.sh > ${S}/package/deps.mak
 	${S}/configure --enable-shared --enable-static --with-sysdeps=${STAGING_DIR_TARGET}/${libdir}/skalibs/sysdeps
@@ -21,8 +25,6 @@ do_configure() {
 
 do_install () {
     oe_runmake install DESTDIR=${D}
-    # Not using stage0 or stage 4 right now, and it uses /bin/execlineb instead of
-    # /usr/bin/execlineb, which causes bitbake to complain
-    rm ${D}/usr/lib/anopa/aa-stage0
-    rm ${D}/usr/lib/anopa/aa-stage4
 }
+
+FILES_${PN} = "/libexec /lib /bin"

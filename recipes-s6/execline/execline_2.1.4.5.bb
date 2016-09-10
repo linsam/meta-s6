@@ -12,6 +12,10 @@ SRC_URI[sha256sum] = "ab4451d4992a5d7fb2ae34cffe4d0806e4902bf9aa27ee3b75617aa353
 
 #inherit autotools
 
+# Force utilities to be in /bin, independant of what yocto thinks. (lots of
+# scripts depend on having a /bin/execlineb shebang line).
+bindir = "/bin"
+
 do_configure() {
 	${S}/configure --enable-shared --enable-static --with-sysdeps=${STAGING_DIR_TARGET}/usr/lib/skalibs/sysdeps
     touch ${S}/-lskarnet
