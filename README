@@ -17,7 +17,8 @@ This layer depends on:
 Patches
 =======
 
-Please submit patches by making a merge request on github.
+Please submit patches by making a merge request on github
+https://github.com:linsam/meta-s6
 
 Maintainer: John O'Meara <john.fr.omeara@gmail.com>
 
