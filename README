@@ -9,12 +9,10 @@ Dependencies
 
 This layer depends on:
 
-  URI: git://git.openembedded.org/bitbake
+  URI: git://git.yoctoproject.org/poky
   branch: master
+  last tested revision: 2cd061a29a94fdcdfec86732e6bcbb71c12c4afc
 
-  URI: git://git.openembedded.org/openembedded-core
-  layers: meta
-  branch: master
 
 Patches
 =======
@@ -29,6 +27,7 @@ Table of Contents
 
   I. Adding the s6 layer to your build
  II. Misc
+III. Building the demo images
 
 
 I. Adding the s6 layer to your build
@@ -71,3 +70,25 @@ two ways to fix this:
      the arm tools for raspberry pi search in /lib/neon (among many other
      subdirectories), where the x86-64 host does not, so the arm libc can go
      there. Other architectures/machines may vary.
+
+
+III. Building the demo images
+=============================
+
+The default conf/local.conf in your project directory needs the following tweaks:
+
+    DISTRO ?= "s6-demo"
+    NOISO = "0"
+    IMAGE_FSTYPES_append = " live"
+    INITRD_IMAGE = "core-image-anopa-minimal-initramfs"
+    INITRAMFS_IMAGE_BUNDLE = "1"
+
+Then, to build, run
+
+    bitbake core-image-anopa-minimal
+    
+To run the image, run:
+
+    runqemu qemux86 core-image-anopa-minimal kvm iso serial
+
+(the "kvm" and "serial" words aren't required, but do enhance the experience)

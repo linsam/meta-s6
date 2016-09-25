@@ -7,7 +7,7 @@ LICENSE = "MIT"
 SECTION = "base"
 LIC_FILES_CHKSUM = "file://../COPYING;md5="
 
-RDEPENDS_anopa-image-initrd="anopa-initrd"
+RDEPENDS_anopa-baselayout-initrd="anopa-initrd"
 
 #do_fetch[noexec] = "1"
 #do_unpack[noexec] = "1"
@@ -87,6 +87,6 @@ EOF
     touch ${D}/services/rootfs/essential
 }
 
-PACKAGES="anopa-image-initrd"
-FILES_anopa-image-initrd="/init /shutdown /etc/anopa /services /root-fs"
+PACKAGES="anopa-baselayout-initrd"
+FILES_${PN}="/init /shutdown /etc/anopa /services /root-fs"
 
