@@ -2,7 +2,6 @@
 echo
 echo -e "\033[32mSystem init\033[0;1m"
 #sleep 2
-mount -t tmpfs none /var/volatile
 # If we mount run volatily, the anopa initrd loses itself
 #mount -t tmpfs none /run
 # Only mount proc if it isn't yet mounted. For example, an iso boot's
@@ -13,83 +12,17 @@ fi
 if [ ! -e /sys/kernel ]; then
     mount -t sysfs sys /sys
 fi
+# Our builder can't handle having FIFOs yet, so we'll make it ourselves if it
+# doesn't exist yet
+if [ ! -e /etc/anopa/services/uncaught-logs/fifo ]; then
+    mkfifo /etc/anopa/services/uncaught-logs/fifo
+fi
+mount -t tmpfs none /var/volatile
 mkdir /var/volatile/log
 mkdir /var/volatile/log/boot
-if [ ! -d /etc/anopa/enabled ]; then
-    mkdir /etc/anopa/enabled
-    touch /etc/anopa/enabled/uncaught-logs
-    mkdir /etc/anopa/services
-    mkdir /etc/anopa/services/uncaught-logs
-    mkfifo /etc/anopa/services/uncaught-logs/fifo
-    cat >/etc/anopa/services/uncaught-logs/run <<EOF
-#!/bin/execlineb -P
-redirfd -w 2 /dev/console
-redirfd -rnb 0 fifo
-s6-setuidgid nobody
-exec -c
-#s6-log -bp t /var/log/init.d
-s6-log -b t /var/log/init.d
-
-#  The -p option is important:
-# even if s6-svscan is told to kill everything,
-# you do not want this logger to die.
-#  The -b option ensures s6-log processes lines one
-# at a time, so it doesn't eat up too much memory
-# in case of a problem spike.
-#
-# Note that, when running under anopa, we actually don't want the -p, because
-# anopa shuts down carefully
-EOF
-    chmod 755 /etc/anopa/services/uncaught-logs/run
-    
-    touch /etc/anopa/enabled/gettycon
-    mkdir /etc/anopa/services/gettycon
-    cat > /etc/anopa/services/gettycon/run <<EOF
-#!/bin/execlineb -P
-# Support agetty, mingetty, or bbgetty?
-getty -J 115200 tty1 vt102
-#mingetty /dev/ttyS0
-#busybox getty 115200 /dev/ttyS0 vt102
-EOF
-    chmod 755 /etc/anopa/services/gettycon/run
-    # For *VERY* minimal installs, we'll have to provide login and passwd
-    # ourselves
-    if [ ! -e /bin/login ]; then
-    cat > /bin/login <<EOF
-#!//bin/execlineb -P
-/bin/sh
-EOF
-    chmod 755 /bin/login
-    fi
-    if [ ! -e /etc/passwd ]; then
-    cat > /etc/passwd <<EOF
-root::0:0:root:/:/bin/sh
-nobody:!:65534:65534:nobody:/:/bin/false
-EOF
-    cat >/etc/group <<EOF
-root:x:0:
-nobody:x:65534:
-EOF
-    fi
-
-    mkdir -p /tmp/sercone
-    cat >/tmp/sercone/run <<EOF
-#!//bin/execlineb -P
-/sbin/agetty -caroot ttyS0
-EOF
-    chmod 755 /tmp/sercone/run
-
-    mkdir -p /etc/anopa/listdirs
-    mkdir /etc/anopa/listdirs/onboot
-    touch /etc/anopa/listdirs/onboot/gettycon
-fi
-mkdir /var/log/init.d
-chown nobody:nobody /var/log/init.d
-if /bin/grep -q debstage0 /proc/cmdline; then
+if aa-incmdline debstage0; then
     exec /bin/sh
 fi
-# Emergency Serial Console (SerConE)
-/bin/s6-supervise /tmp/sercone &
 exec /libexec/aa-stage1
 # Just incase above exec fails, fall back to a shell
 exec /bin/sh

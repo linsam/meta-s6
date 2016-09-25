@@ -1,0 +1,23 @@
+#!/bin/execlineb -P
+redirfd -w 2 /dev/console
+redirfd -rnb 0 fifo
+# Before dropping privilege, ensure our target directory exists
+foreground {
+  if -n { [ -e /var/log/init.d ] }
+    foreground { mkdir /var/log/init.d }
+    chown nobody /var/log/init.d
+}
+s6-setuidgid nobody
+exec -c
+#s6-log -bp t /var/log/init.d
+s6-log -b t /var/log/init.d
+
+#  The -p option is important:
+# even if s6-svscan is told to kill everything,
+# you do not want this logger to die.
+#  The -b option ensures s6-log processes lines one
+# at a time, so it doesn't eat up too much memory
+# in case of a problem spike.
+#
+# Note that, when running under anopa, we actually don't want the -p, because
+# anopa shuts down carefully
