@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index 0b690fc..55136cc 100755
+--- a/configure
++++ b/configure
+@@ -82,7 +82,7 @@ cmdexists () {
+ }
+ 
+ trycc () {
+-  test -z "$CC_AUTO" && cmdexists "$1" && CC_AUTO=$1
++  test -z "$CC_AUTO" && cmdexists "$1" && CC_AUTO="$*"
+ }
+ 
+ stripdir () {
