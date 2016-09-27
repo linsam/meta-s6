@@ -1,7 +1,6 @@
 IMAGE_INSTALL = "\
     anopa \
     anopa-baselayout \
-    bash \
     busybox \
     s6-linux-utils \
     s6-networking \
@@ -9,5 +8,7 @@ IMAGE_INSTALL = "\
     util-linux-agetty \
     "
 IMAGE_LINGUAS = " "
+
+IMAGE_ROOTFS_SIZE="15000"
 
 inherit core-image
