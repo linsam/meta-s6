@@ -1,0 +1,14 @@
+In the move from 2.3.8 to 2.3.9, skalibs changed some things to make cross
+compiling easier, but makes yocto builds a bit harder. For now, we'll undo one
+of the changes to that version to get the old behavior.
+--- old/configure	2016-09-27 00:56:21.612719914 -0400
++++ new/configure.2	2016-09-27 01:23:01.761282561 -0400
+@@ -166,7 +166,7 @@
+ 
+ # Actual script
+ 
+-CC_AUTO=
++CC_AUTO=${CC}
+ CFLAGS_AUTO="$CFLAGS"
+ CPPFLAGS_AUTO="-D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 -O2 $CPPFLAGS"
+ LDFLAGS_AUTO="$LDFLAGS"
