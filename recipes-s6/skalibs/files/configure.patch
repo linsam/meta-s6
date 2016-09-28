@@ -1,3 +1,4 @@
+Patch from Laurent Bercot to allow multi-token CC tool.
 diff --git a/configure b/configure
 index 0b690fc..55136cc 100755
 --- a/configure
