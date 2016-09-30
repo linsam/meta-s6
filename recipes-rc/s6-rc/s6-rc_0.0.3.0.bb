@@ -1,0 +1,7 @@
+require s6-rc.inc
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=44134bb2d28ac2ef82e6501b78c10103"
+
+SRC_URI[md5sum] = "fc7e90c360fece150e2978a44e1663e9"
+SRC_URI[sha256sum] = "5eb94e77961a075e6305e89e3a5c7e6c95fb7037682d4ea45277c1ab1625892e"
+
