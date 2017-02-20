@@ -4,6 +4,7 @@ LICENSE = "ISC"
 SECTION = "base"
 DEPENDS = "skalibs execline"
 RDEPENDS_${PN} = "skalibs"
+PR = "r2"
 
 SRC_URI = "http://skarnet.org/software/${PN}/${PN}-${PV}.tar.gz"
 
@@ -18,3 +19,5 @@ do_configure() {
 do_install () {
     oe_runmake install DESTDIR=${D}
 }
+
+FILES_${PN} += " /libexec"
