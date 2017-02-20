@@ -6,7 +6,7 @@ HOMEPAGE = ""
 LICENSE = "MIT"
 SECTION = "base"
 RDEPENDS_${PN} = "execline"
-LIC_FILES_CHKSUM = "file://../COPYING;md5="
+LIC_FILES_CHKSUM = "file://../COPYING;md5=22aae3ee3a239ced3a3ebdba09260941"
 SRC_URI = "file://init \
            file://getty@-run \
            file://uncaught-logs-run \
