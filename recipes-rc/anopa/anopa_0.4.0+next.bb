@@ -7,6 +7,7 @@ RDEPENDS_${PN} = "execline anopa-common"
 RDEPENDS_${PN}-initrd = "execline anopa-common"
 RDEPENDS_${PN}-common = "skalibs execline s6"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+PR = "r2"
 
 SRCREV = "c371ecc5a81140ce5b384a4fff936fd00d4079db"
 SRC_URI = "git://github.com/jjk-jacky/anopa;protocol=git;branch=next \
@@ -14,13 +15,9 @@ SRC_URI = "git://github.com/jjk-jacky/anopa;protocol=git;branch=next \
 
 S = "${WORKDIR}/git"
 
-# Attempt to add debug symbols; sometimes 'aa-status -aL' crashes with a
-# malloc corruption that's hard to track down
-EXTRA_OEMAKE = "CFLAGS=-g LDFLAGS=-g"
-
 do_configure() {
     ${S}/tools/gen-deps.sh > ${S}/package/deps.mak
-	${S}/configure --enable-shared --enable-static --with-sysdeps=${STAGING_DIR_TARGET}/${libdir}/skalibs/sysdeps
+	${S}/configure --enable-shared --enable-static --with-sysdeps=${STAGING_DIR_TARGET}${libdir}/skalibs/sysdeps --with-lib=${STAGING_DIR_TARGET}${libdir} --with-dynlib=${STAGING_DIR_TARGET}${libdir} --exec-prefix=/
     touch ${S}/-lskarnet
     touch ${S}/-ls6
     touch ${S}/-lexecline
