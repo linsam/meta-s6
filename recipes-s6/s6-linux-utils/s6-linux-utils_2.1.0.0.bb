@@ -6,3 +6,5 @@ SRC_URI[md5sum] = "fe368efa0111ae2e7aec3081b1053165"
 SRC_URI[sha256sum] = "3523ba84ba524198711b2de3edaaf620381a4e95d78ec6d13dcb7aba42397ead"
 
 SRC_URI += " file://configure.patch"
+
+PR="r2"

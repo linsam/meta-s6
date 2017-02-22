@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "skalibs"
 SRC_URI = "http://skarnet.org/software/${PN}/${PN}-${PV}.tar.gz"
 
 do_configure() {
-	${S}/configure --enable-shared --enable-static --with-sysdeps=${STAGING_DIR_TARGET}/usr/lib/skalibs/sysdeps
+	${S}/configure --exec-prefix=/usr --enable-shared --enable-static --with-sysdeps=${STAGING_DIR_TARGET}/usr/lib/skalibs/sysdeps
     touch ${S}/-lskarnet
 }
 
