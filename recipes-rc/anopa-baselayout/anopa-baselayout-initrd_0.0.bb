@@ -56,6 +56,8 @@ if [ \$i -eq 30 ]; then
   aa-echo -De disk not found
   exit 1
 fi
+# TODO: This fails if we boot from CD but the machine has an ide harddrive
+# installed (as hda)
 if [ -e /dev/hda ]; then
     # We are on disk image
     mount /dev/hda /tmpmnt
