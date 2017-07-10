@@ -1,0 +1,12 @@
+#!/bin/execlineb -P
+
+pipeline {
+    fdmove -c 2 1
+    if { s6-echo "init-stage2 starting." }
+    # TODO: error handling
+    # NOTE: On error, should probably spawn shell after redirecting i/o back to
+    # the console, otherwise our pipe to tee is likely to get in the way.
+    if { s6-rc-init /run/service }
+    s6-rc -v 2 -u change ok-all
+}
+tee /run/service/s6-svscan-log/fifo

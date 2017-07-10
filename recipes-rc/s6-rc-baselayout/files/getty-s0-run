@@ -1,0 +1,4 @@
+#!/bin/execlineb -P
+# Support agetty, mingetty, or bbgetty?
+fdmove -c 1 2
+getty -J 115200 ttyS0 vt102
