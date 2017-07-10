@@ -2,8 +2,6 @@
 echo
 echo -e "\033[32mSystem init\033[0;1m"
 #sleep 2
-# If we mount run volatily, the anopa initrd loses itself
-#mount -t tmpfs none /run
 # Only mount proc if it isn't yet mounted. For example, an iso boot's
 # initramfs will pre-mount this before we are called.
 if [ ! -e /proc/1 ]; then
@@ -12,6 +10,12 @@ fi
 if [ ! -e /sys/kernel ]; then
     mount -t sysfs sys /sys
 fi
+# If we mount run volatily, the anopa initrd loses itself. If we don't and are
+# running from persistant storage, we can't reboot.
+if ! grep -q \ /run\  /proc/mounts; then
+    mount -t tmpfs none /run
+fi
+#mount -t tmpfs none /run
 # Our builder can't handle having FIFOs yet, so we'll make it ourselves if it
 # doesn't exist yet
 if [ ! -e /etc/anopa/services/uncaught-logs/fifo ]; then
@@ -21,6 +25,8 @@ mount -t tmpfs none /var/volatile
 mkdir /var/volatile/log
 mkdir /var/volatile/log/boot
 if aa-incmdline debstage0; then
+    echo "Debug stage 0 requested."
+    echo "run 'exec /libexec/aa-stage1' to resume startup"
     exec /bin/sh
 fi
 exec /libexec/aa-stage1

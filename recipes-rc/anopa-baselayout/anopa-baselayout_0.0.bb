@@ -9,6 +9,7 @@ RDEPENDS_${PN} = "execline"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=22aae3ee3a239ced3a3ebdba09260941"
 SRC_URI = "file://init \
            file://getty@-run \
+           file://hostname-start \
            file://uncaught-logs-run \
            file://PATH \
            file://COPYING \
@@ -36,18 +37,23 @@ do_install () {
     touch ${D}/etc/anopa/enabled/uncaught-logs
     touch ${D}/etc/anopa/enabled/getty@tty1
     touch ${D}/etc/anopa/enabled/getty@ttyS0
+    touch ${D}/etc/anopa/enabled/hostname
     install -d ${D}/etc/anopa/services
     install -d ${D}/etc/anopa/services/uncaught-logs
     # If we make the fifo here, yocto QA hangs trying to read from it :-(
+    # This was fixed after jethro...
     # We'll make the fifo in our /sbin/init
     #mkfifo ${D}/etc/anopa/services/uncaught-logs/fifo
     install -m 0744 ${B}/../uncaught-logs-run ${D}/etc/anopa/services/uncaught-logs/run
     install -d ${D}/etc/anopa/services/getty@
     install -m 0744 ${B}/../getty@-run ${D}/etc/anopa/services/getty@/run
+    install -d ${D}/etc/anopa/services/hostname
+    install -m 0744 ${B}/../hostname-start ${D}/etc/anopa/services/hostname/start
     install -d ${D}/etc/anopa/listdirs
     install -d ${D}/etc/anopa/listdirs/onboot
     touch ${D}/etc/anopa/listdirs/onboot/getty@tty1
     touch ${D}/etc/anopa/listdirs/onboot/getty@ttyS0
+    touch ${D}/etc/anopa/listdirs/onboot/hostname
     install -d ${D}/var
     # NOTE: via fs-perms.txt, yocto typically forces /var/log to be a symlink
     # to /var/volatile/log, but this is a matter of builder's policy. We'll

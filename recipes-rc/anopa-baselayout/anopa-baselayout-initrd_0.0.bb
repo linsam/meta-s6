@@ -6,6 +6,7 @@ HOMEPAGE = ""
 LICENSE = "MIT"
 SECTION = "base"
 LIC_FILES_CHKSUM = "file://../COPYING;md5="
+PR='r1'
 
 RDEPENDS_anopa-baselayout-initrd="anopa-initrd"
 
@@ -42,41 +43,54 @@ mount -t proc proc /proc
 mount -t devtmpfs none /dev
 mkdir /tmpmnt
 aa-echo "Waiting for disk"
-for i in \`/bin/busybox seq 30\`; do
-  if [ -e /dev/hda ]; then
-    break;
-  fi
-  if [ -e /dev/hdc ]; then
-    break;
+root=\`aa-incmdline root\`
+timeout=15
+for i in \`/bin/busybox seq \$timeout\`; do
+  if [ -n "\$root" ]; then
+    if [ -e "\$root" ]; then
+      found="\$root"
+      break;
+    fi
+  else
+    # TODO: This fails if we boot from CD but the machine has an ide harddrive
+    # installed (as hda)
+    if [ -e /dev/hda ]; then
+      found=/dev/hda
+      break;
+    fi
+    if [ -e /dev/hdc ]; then
+      found=/dev/hdc
+      break;
+    fi
   fi
   aa-echo -D "Waiting for disk \$i / 30"
   sleep 1
 done
-if [ \$i -eq 30 ]; then
+if [ \$i -eq \$timeout ]; then
   aa-echo -De disk not found
   exit 1
 fi
-# TODO: This fails if we boot from CD but the machine has an ide harddrive
-# installed (as hda)
-if [ -e /dev/hda ]; then
-    # We are on disk image
-    mount /dev/hda /tmpmnt
+mount \$found /tmpmnt || exit 1
+if [ -e /tmpmnt/rootfs.img ]; then
+    # This is a live CD/SD/whatever with real root in file
+    cp /tmpmnt/rootfs.img / || exit 1
+    umount /tmpmnt
+    mount -oloop /rootfs.img /root-fs
 else
-    # We are on cd/iso image
-    mount /dev/hdc /tmpmnt
+    # This is a "regular" Linux system, not a live CD
+    mount --move /tmpmnt /root-fs
 fi
-cp /tmpmnt/rootfs.img /
-umount /tmpmnt
-mount -oloop /rootfs.img /root-fs
 [ -e /root-fs/run ] || mkdir /root-fs/run
 [ -e /root-fs/proc ] || mkdir /root-fs/proc
 mount --bind /proc /root-fs/proc
 mount --bind /dev /root-fs/dev
+mount -ttmpfs tmpfs /root-fs/run
 EOF
     cat >${D}/services/rootfs/stop <<EOF
 #!/bin/sh
 umount /root-fs/proc
 umount /root-fs/sys
+umount /root-fs/run
 # The devtree of the main root tends to be in use until everything is gone.
 # We'll move it into the initramfs so that we can finish cleaning up.
 mkdir /old_dev
