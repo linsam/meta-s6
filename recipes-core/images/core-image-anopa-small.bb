@@ -29,6 +29,10 @@ IMAGE_INSTALL = "\
     procps \
     psmisc \
     s6-networking \
+    s6-portable-utils \
+    s6-linux-utils \
+    s6-dns \
+    s6-networking \
     sed \
     strace \
     sudo \
