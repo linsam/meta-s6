@@ -1,0 +1,11 @@
+#!/command/execlineb -P
+
+#foreground { aa-service aa-echo "service " $SERVICE_NAME " instance " $INSTANCE }
+
+aa-service
+
+s6-envdir /etc/conf.d/net/$INSTANCE
+import -iu IPADDR
+foreground { aa-echo "Set address of " $INSTANCE " to " $IPADDR }
+ip addr add $IPADDR dev $INSTANCE
+
