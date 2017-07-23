@@ -5,7 +5,36 @@
 aa-service
 
 s6-envdir /etc/conf.d/net/$INSTANCE
-import -iu IPADDR
-foreground { aa-echo "Removing address of " $INSTANCE " to " $IPADDR }
-ip addr del $IPADDR dev $INSTANCE
+define DEV $INSTANCE
 
+s6-envdir -f /etc/conf.d/net/$DEV
+multisubstitute {
+    # Allow, but don't require, addresses and/or routes
+    importas -uCsd"\n" IPADDRS IPADDRS
+    importas -uCsd"\n" ROUTES ROUTES
+}
+# Reverse order of start script. Begin by removing routes
+foreground {
+    forx ROUTE { $ROUTES }
+    importas -uCs ROUTE ROUTE
+    # Re-replace DEV, so that if it occurs in the ROUTE it gets substituted
+    # now. $ROUTE (below) has already been replaced at this point
+    define DEV $DEV
+    foreground { aa-echo "Removing route " $ROUTE }
+    ip route del $ROUTE
+}
+# Next, apply any addresses we were given
+# TODO: Could just do "ip addr flush dev $DEV" instead of looping. That would
+# also prevent problems if the user changes the config file while the
+# interface is still up. NOTE: That doesn't help the routes; how can we flush
+# the active routes associated with this interface?
+foreground {
+    forx ADDR { $IPADDRS }
+    importas -uCs ADDR ADDR
+    foreground { aa-echo "Removing address of " $ADDR " from " $DEV }
+    ip addr del dev $DEV $ADDR
+}
+# Finally, bring the interface down
+foreground {
+    ip link set dev $DEV down
+}

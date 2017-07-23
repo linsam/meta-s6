@@ -3,9 +3,32 @@
 #foreground { aa-service aa-echo "service " $SERVICE_NAME " instance " $INSTANCE }
 
 aa-service
+define DEV $INSTANCE
 
-s6-envdir /etc/conf.d/net/$INSTANCE
-import -iu IPADDR
-foreground { aa-echo "Set address of " $INSTANCE " to " $IPADDR }
-ip addr add $IPADDR dev $INSTANCE
-
+s6-envdir -f /etc/conf.d/net/$DEV
+multisubstitute {
+    # Allow, but don't require, addresses and/or routes
+    importas -uCsd"\n" IPADDRS IPADDRS
+    importas -uCsd"\n" ROUTES ROUTES
+}
+# First, set the interface to active. This is the only thing we definitely do
+foreground {
+    ip link set dev $DEV up
+}
+# Next, apply any addresses we were given
+foreground {
+    forx ADDR { $IPADDRS }
+    importas -uCs ADDR ADDR
+    foreground { aa-echo "Set address of " $DEV " to " $ADDR }
+    ip addr add dev $DEV $ADDR
+}
+# Finally, apply any routes we were given
+foreground {
+    forx ROUTE { $ROUTES }
+    importas -uCs ROUTE ROUTE
+    # Re-replace DEV, so that if it occurs in the ROUTE it gets substituted
+    # now. $ROUTE (below) has already been replaced at this point
+    define DEV $DEV
+    foreground { aa-echo "Add route " $ROUTE }
+    ip route add $ROUTE
+}
