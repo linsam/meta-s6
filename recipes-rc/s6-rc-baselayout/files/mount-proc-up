@@ -1,1 +1,2 @@
+if -nt { [ -e /proc/self ] }
 s6-mount -wt proc proc /proc
