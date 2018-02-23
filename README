@@ -91,6 +91,10 @@ The default conf/local.conf in your project directory needs the following tweaks
     INITRD_IMAGE = "core-image-anopa-minimal-initramfs"
     INITRAMFS_IMAGE_BUNDLE = "1"
 
+Additionally, some versions of anopa require older versions of s6 and friends.
+See the file working-versions for additional entries in conf/local.conf based
+on which version of anopa is desired.
+
 Then, to build, run
 
     bitbake core-image-anopa-minimal
@@ -100,6 +104,10 @@ To run the image, run:
     runqemu qemux86 core-image-anopa-minimal kvm iso
 
 (the "kvm"  word isn't required, but does enhance the experience)
+
+Note: If the system fails to start with a message that /dev/ram0 couldn't be
+mounted, kill and restart the emulation, use 'tab' to edit the line, and
+replace 'ram0' with 'hdc'.
 
 
 Notes for Krogoth: Krogoth doesn't build live images, but does still build a

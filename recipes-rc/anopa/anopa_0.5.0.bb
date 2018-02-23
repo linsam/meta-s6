@@ -2,10 +2,10 @@ DESCRIPTION = "Anopa rc"
 HOMEPAGE = "http://jjacky.com/anopa/"
 LICENSE = "GPLv3+"
 SECTION = "base"
-DEPENDS = "skalibs execline s6"
+DEPENDS = "skalibs (< 2.6) execline s6 (< 2.7)"
 RDEPENDS_${PN} = "execline anopa-common"
 RDEPENDS_${PN}-initrd = "execline anopa-common"
-RDEPENDS_${PN}-common = "skalibs execline s6"
+RDEPENDS_${PN}-common = "skalibs (< 2.6) execline s6 (< 2.7)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 # Anopa 0.5.0 requires
