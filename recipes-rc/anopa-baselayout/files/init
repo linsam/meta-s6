@@ -24,6 +24,18 @@ fi
 mount -t tmpfs none /var/volatile
 mkdir /var/volatile/log
 mkdir /var/volatile/log/boot
+# Stage1 on anopa-0.5+next now requires that /var/lib/repodir exist and be
+# pre-populated, which will be copied to the volatile services directory,
+# instead of generating it during boot. Not having it is therefore fatal, so
+# if it doesn't exist, we'll generate it. We won't do anything fancy here,
+# like making sure it is valid enough.
+# TODO: Should we make use of some other features?
+if [ ! -e /var/lib/repodir/onboot ]; then
+    mkdir -p /var/lib/repodir
+    echo "Generating on-boot repo"
+    aa-enable -l onboot -r /var/lib/repodir/onboot -i /libexec/aa-stage2 -f /libexec/aa-stage3
+    aa-enable -r /var/lib/repodir/onboot -k uncaught-logs uncaught-logs
+fi
 if aa-incmdline debstage0; then
     echo "Debug stage 0 requested."
     echo "run 'exec /libexec/aa-stage1' to resume startup"
