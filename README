@@ -13,16 +13,14 @@ This layer depends on:
   --------  ----------------    -----------  -----------------------------------------
   branch    last tested tag     yocto tag    rev
   --------  ----------------    -----------  -----------------------------------------
-  jethro    jethro-14.0.3       yocto-2.0.3  adb34b8ddcd8cc34ae7d2b1b2e4b4d291d790f56
-  krogoth   krogoth-15.0.2      yocto-2.1.2  cca8dd15c8096626052f6d8d25ff1e9a606104a3
-  morty     morty-16.0.0        yocto-2.2    dc8508f609974cc99606b9042bfa7f870ce80228
+  sumo      sumo-19.0.3         yocto-2.5.3  84b78df15ff77b2fe2aeb62fcaa265dce7ebfbbb
   --------  ----------------    -----------  -----------------------------------------
 
 Patches
 =======
 
 Please submit patches by making a merge request on github
-https://github.com:linsam/meta-s6
+https://github.com/linsam/meta-s6
 
 Maintainer: John O'Meara <john.fr.omeara@gmail.com>
 
@@ -101,9 +99,9 @@ Then, to build, run
     
 To run the image, run:
 
-    runqemu qemux86 core-image-anopa-minimal kvm iso
+    runqemu qemux86 core-image-anopa-minimal kvm
 
-(the "kvm"  word isn't required, but does enhance the experience)
+(the "kvm"  word isn't required, but does enhance the experience. Adding 'iso' to the above runs the CD image with initramfs, though that's currently broken)
 
 Note: If the system fails to start with a message that /dev/ram0 couldn't be
 mounted, kill and restart the emulation, use 'tab' to edit the line, and

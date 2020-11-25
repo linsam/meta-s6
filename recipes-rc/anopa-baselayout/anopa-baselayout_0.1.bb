@@ -62,8 +62,8 @@ do_install () {
     # run script for uncaught-logs for an example.
     install -d ${D}/var/log
     install -d ${D}/var/volatile
-    install -d ${D}/proc
-    install -d ${D}/sys
+    #install -d ${D}/proc
+    #install -d ${D}/sys
     install -d ${D}/dev
 }
 

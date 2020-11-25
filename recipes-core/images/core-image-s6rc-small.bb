@@ -22,7 +22,6 @@ IMAGE_INSTALL = "\
     gzip \
     iproute2 \
     iptables \
-    libpam \
     lsof \
     parted \
     pciutils \
@@ -46,6 +45,7 @@ IMAGE_INSTALL = "\
     zip \
     "
 #    #tcpdump \
+#   #libpam \
 #
 IMAGE_LINGUAS = " "
 

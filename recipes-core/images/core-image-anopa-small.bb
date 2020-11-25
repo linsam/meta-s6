@@ -21,8 +21,8 @@ IMAGE_INSTALL = "\
     gnutls \
     gzip \
     iproute2 \
+    iproute2-tc \
     iptables \
-    libpam \
     lsof \
     parted \
     pciutils \
@@ -45,7 +45,7 @@ IMAGE_INSTALL = "\
     "
 IMAGE_LINGUAS = " "
 
-DISTRO_FEATURES += " pam"
+#DISTRO_FEATURES += " pam libpam"
 
 IMAGE_ROOTFS_SIZE="15000"
 

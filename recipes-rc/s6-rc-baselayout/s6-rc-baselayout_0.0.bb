@@ -59,8 +59,11 @@ do_install () {
     # run script for uncaught-logs for an example.
     install -d ${D}/var/log
     install -d ${D}/var/volatile
-    install -d ${D}/proc
-    install -d ${D}/sys
+    # /proc and /sys are now part of base-files (at least as of poky-sumo. It
+    # wasn't by the end of poky-morty; not sure when between the two this
+    # happened)
+    #install -d ${D}/proc
+    #install -d ${D}/sys
     install -d ${D}/dev
     install -m 0744 ${B}/../rc.init ${D}/etc/rc.init
     install -m 0744 ${B}/../rc.tini ${D}/etc/rc.tini
