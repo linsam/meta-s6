@@ -78,8 +78,7 @@ two ways to fix this:
 III. Building the demo images
 =============================
 
-NOTE: The live image only builds on Jethro and Morty, but not Krogoth. See
-additional notes at the end of the section
+Note: At the moment, the anopa images do not work.
 
 The default conf/local.conf in your project directory needs the following tweaks:
 
@@ -89,32 +88,14 @@ The default conf/local.conf in your project directory needs the following tweaks
     INITRD_IMAGE = "core-image-anopa-minimal-initramfs"
     INITRAMFS_IMAGE_BUNDLE = "1"
 
-Additionally, some versions of anopa require older versions of s6 and friends.
-See the file working-versions for additional entries in conf/local.conf based
-on which version of anopa is desired.
-
 Then, to build, run
 
-    bitbake core-image-anopa-minimal
+    bitbake core-image-s6rc-small
     
 To run the image, run:
 
-    runqemu qemux86 core-image-anopa-minimal kvm
+    runqemu qemux86 core-image-s6rc-small kvm
 
-(the "kvm"  word isn't required, but does enhance the experience. Adding 'iso' to the above runs the CD image with initramfs, though that's currently broken)
+(the "kvm"  word isn't required, but does enhance the experience. Adding 'iso' to the above runs the CD image with initramfs, though that's currently broken.)
 
-Note: If the system fails to start with a message that /dev/ram0 couldn't be
-mounted, kill and restart the emulation, use 'tab' to edit the line, and
-replace 'ram0' with 'hdc'.
-
-
-Notes for Krogoth: Krogoth doesn't build live images, but does still build a
-system image. It can be run ONCE by dropping the 'iso' from the 'runqemu' line
-above. It will boot, but shutting down will panic the kernel. And, it will
-fail to boot the next time. This is because the example startup scripts were
-written to only support booting from an initramfs (as the livecd does), and
-thus they don't function correctly when in any other configuration.
-
-I recommend upgrading to Morty or downgrading to Jethro to run the demo
-itself. For integrating s6 and friends with your project, Krogoth should work
-fine.
+The sample base layout will launch an early getty on tty2 (alt+f2 on console to get to it) which you can log into if things go awry. A fully booted system will also have a getty on tty1 and ttyS0 (serial port).
